@@ -30,16 +30,46 @@ class View:
     def update(self):
         self.page.update()
 
+    # Creo una funzione che mi permetta di trasformare la lista artefatti da una stringa ad un testo di Flet,
+    # questa funzione verrà poi chiamata in controller.show_artefatti
+
+    def mostra_artefatti(self, lista_artefatti):
+        self.lista_artefatti.controls.clear()
+        for item in lista_artefatti:
+            self.lista_artefatti.controls.append(ft.Text(item))
+            self.page.update()
+
     def load_interface(self):
         """ Crea e aggiunge gli elementi di UI alla pagina e la aggiorna. """
         # --- Sezione 1: Intestazione ---
         self.txt_titolo = ft.Text(value="Musei di Torino", size=38, weight=ft.FontWeight.BOLD)
 
         # --- Sezione 2: Filtraggio ---
-        # TODO
+        musei = self.controller.musei_dropdown()        # Chiamo la funzione di controller che ritorna i musei
+        self.dd_museo = ft.Dropdown(label = "Museo",
+                                    # Dall'archivio di Flet trovo un modo per unire diverse istruzioni all'interno di Options
+                                    options = [ft.dropdown.Option("Nessun Filtro")] + [ft.dropdown.Option(museo) for museo in musei],
+                                    width = 400,
+                                    on_change = self.controller.handler_dropdown_change_museo)
+
+        epoche = self.controller.epoche_dropdown()      # Chiamo la funzione di controller che ritorna le epoche
+        self.dd_epoche = ft.Dropdown(label = "Epoca",
+                                     options = [ft.dropdown.Option("Nessun Filtro")] + [ft.dropdown.Option(epoca) for epoca in epoche],
+                                     width = 200,
+                                     on_change = self.controller.handler_dropdown_change_epoca)
+
+        row = ft.Row(controls = [self.dd_museo, self.dd_epoche],
+                     alignment = ft.MainAxisAlignment.CENTER)
+
 
         # Sezione 3: Artefatti
-        # TODO
+
+        self.lista_artefatti = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
+
+        self.mostra_artefatti_btn = ft.ElevatedButton(text = "Mostra Artefatti",
+                                                 width = 200,
+                                                 on_click = self.controller.show_artefatti)
+
 
         # --- Toggle Tema ---
         self.toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=self.cambia_tema)
@@ -53,10 +83,12 @@ class View:
             ft.Divider(),
 
             # Sezione 2: Filtraggio
-            # TODO
+            row,
+            ft.Divider(),
 
             # Sezione 3: Artefatti
-            # TODO
+            self.mostra_artefatti_btn,
+            self.lista_artefatti,
         )
 
         self.page.scroll = "adaptive"
