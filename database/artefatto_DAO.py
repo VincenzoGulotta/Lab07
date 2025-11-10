@@ -11,6 +11,7 @@ class ArtefattoDAO:
         pass
 
 
+    # Funzione necessaria per salvare tutti gli artefatti in una lista
     def get_artefatti(self):
 
         try:

@@ -12,7 +12,7 @@ class MuseoDAO:
     def __init__(self):
         pass
 
-
+    # Funzione necessaria per salvare tutti i musei in una lista
     def get_musei(self):
 
         try:
@@ -29,6 +29,7 @@ class MuseoDAO:
         except Exception as e:
             return e
         return musei
+
 
     def get_musei_filtrati(self, nome):
         lista_musei = []
